@@ -1,0 +1,120 @@
+package com.kanbagoly.polypus;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+
+// No dependency
+// Threads should start at the same time
+// Have timeout (so wait to finish it)
+// Possible to write fast test (< 1s)
+// Spot thrown exceptions
+// No checked exception thrown in the method signatures
+// TODO: More meaningful method names
+// TODO: provide test
+// TODO: Java 8 Futures?
+public class ConcurrentAssertions {
+
+    private final List<Runnable> tasks;
+    private int nTimes = 100;
+    private Duration timeout = new Duration(1, TimeUnit.MILLISECONDS);
+
+    private ConcurrentAssertions(List<Runnable> tasks) {
+        this.tasks = tasks;
+    }
+
+    public ConcurrentAssertions repeatedCalls(int nTimes) {
+        this.nTimes = nTimes;
+        return this;
+    }
+
+    public ConcurrentAssertions timeoutAfter(long timeout, TimeUnit unit) {
+        this.timeout = new Duration(timeout, unit);
+        return this;
+    }
+
+    public void shouldNotThrow() {
+        final ThrownExceptions exceptions = new ThrownExceptions();
+        execute(executor -> {
+            final CountDownLatch blocker = new CountDownLatch(1);
+            final CountDownLatch finished = new CountDownLatch(tasks.size() * nTimes);
+            for (int i = 1; i <= nTimes; i++) {
+                for (Runnable task : tasks) {
+                    executor.submit(() -> {
+                        try {
+                            blocker.await();
+                            task.run();
+                        } catch (Throwable e) {
+                            exceptions.add(e);
+                        } finally {
+                            finished.countDown();
+                        }
+                    });
+                }
+            }
+            blocker.countDown();
+            await(finished);
+        });
+        exceptions.assertNotThrown();
+    }
+
+    private void execute(Consumer<ExecutorService> runnable) {
+        ExecutorService threadPool = Executors.newFixedThreadPool(optimalThreadPoolSize());
+        try {
+            runnable.accept(threadPool);
+        } finally {
+            threadPool.shutdownNow();
+        }
+    }
+
+    // TODO: Readable exception ?
+    private void await(CountDownLatch latch) {
+        try {
+            if (!latch.await(timeout.amount, timeout.unit)) {
+                throw new RuntimeException("Timeout after " + timeout.amount + " " + timeout.unit);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // TODO: Readable exceptions
+    private static class ThrownExceptions {
+        private final List<Throwable> exceptions = Collections.synchronizedList(new ArrayList<>());
+        void add(Throwable exception) {
+            exceptions.add(exception);
+        }
+        void assertNotThrown() {
+            if (!exceptions.isEmpty()) {
+                throw new RuntimeException("Failed with exception(s): " + exceptions);
+            }
+        }
+    }
+
+    public static ConcurrentAssertions assertConcurrently(Runnable... tasks) {
+        return new ConcurrentAssertions(Arrays.asList(tasks));
+    }
+
+    private static int optimalThreadPoolSize() {
+        return Runtime.getRuntime().availableProcessors();
+    }
+
+    private static class Duration {
+        final long amount;
+        final TimeUnit unit;
+        private Duration(long amount, TimeUnit unit) {
+            if (amount <= 0) {
+                throw new IllegalArgumentException("Timeout must have positive value");
+            }
+            this.amount = amount;
+            this.unit = unit;
+        }
+    }
+
+}
