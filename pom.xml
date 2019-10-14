@@ -87,10 +87,6 @@
                                             <counter>BRANCH</counter>
                                             <minimum>1.00</minimum>
                                         </limit>
-                                        <limit>
-                                            <counter>COMPLEXITY</counter>
-                                            <minimum>1.00</minimum>
-                                        </limit>
                                     </limits>
                                 </rule>
                             </rules>
