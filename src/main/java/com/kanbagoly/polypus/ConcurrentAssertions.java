@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 // No dependency
 // Threads should start at the same time
@@ -84,7 +85,14 @@ public class ConcurrentAssertions {
         }
     }
 
-    // TODO: Readable exceptions
+    public static ConcurrentAssertions assertConcurrently(Runnable... tasks) {
+        return new ConcurrentAssertions(Arrays.asList(tasks));
+    }
+
+    private static int optimalThreadPoolSize() {
+        return Runtime.getRuntime().availableProcessors();
+    }
+
     private static class ThrownExceptions {
         private final List<Throwable> exceptions = Collections.synchronizedList(new ArrayList<>());
         void add(Throwable exception) {
@@ -92,17 +100,11 @@ public class ConcurrentAssertions {
         }
         void assertNotThrown() {
             if (!exceptions.isEmpty()) {
-                throw new RuntimeException("Failed with exception(s): " + exceptions);
+                Throwable head = exceptions.get(0);
+                String asString = exceptions.stream().map(Throwable::toString).collect(Collectors.joining(", "));
+                throw new RuntimeException("Test failed with the following exception(s): " + asString, head);
             }
         }
-    }
-
-    public static ConcurrentAssertions assertConcurrently(Runnable... tasks) {
-        return new ConcurrentAssertions(Arrays.asList(tasks));
-    }
-
-    private static int optimalThreadPoolSize() {
-        return Runtime.getRuntime().availableProcessors();
     }
 
     private static class Duration {
