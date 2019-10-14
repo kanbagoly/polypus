@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import static com.kanbagoly.polypus.ConcurrentAssertions.assertConcurrently;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-public class ConcurrentAssertionsTest {
+class ConcurrentAssertionsTest {
 
     @Test
     void notThreadSafeExecutionShouldThrow() {
@@ -19,13 +19,13 @@ public class ConcurrentAssertionsTest {
         Runnable creator = () -> notThreadSafe.add(1);
         Runnable query = () -> notThreadSafe.getNumbers();
 
-        ThrowableAssert.ThrowingCallable testToFail = () ->
+        ThrowableAssert.ThrowingCallable testShouldFail = () ->
                 assertConcurrently(creator, query)
                         .repeatedCalls(100)
                         .timeoutAfter(1, TimeUnit.SECONDS)
                         .shouldNotThrow();
 
-        assertThatCode(testToFail)
+        assertThatCode(testShouldFail)
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageStartingWith(
                         "Test failed with the following exception(s): java.util.ConcurrentModificationException");
