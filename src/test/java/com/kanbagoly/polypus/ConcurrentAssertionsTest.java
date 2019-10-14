@@ -42,6 +42,17 @@ class ConcurrentAssertionsTest {
                 .doesNotThrowAnyException();
     }
 
+    @Test
+    void initializingWithNonPositiveValueShouldThrow() {
+        ThrowableAssert.ThrowingCallable initializationShouldFail =
+                () -> assertConcurrently(() -> {})
+                        .timeoutAfter(0, TimeUnit.SECONDS);
+
+        assertThatCode(initializationShouldFail)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Timeout must have positive value");
+    }
+
     private static class NotThreadSafeClass {
         private List<Integer> list = new ArrayList<>();
         private void add(Integer number) {
