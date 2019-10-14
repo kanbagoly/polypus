@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 // No dependency
 // Threads should start at the same time
-// Have timeout (so wait to finish it)
+// Have timeout (so and test should fail if it pass)
 // Possible to write fast test (< 1s)
 // Spot thrown exceptions
 // No checked exception thrown in the method signatures
@@ -101,8 +101,9 @@ public class ConcurrentAssertions {
         void assertNotThrown() {
             if (!exceptions.isEmpty()) {
                 Throwable head = exceptions.get(0);
-                String asString = exceptions.stream().map(Throwable::toString).collect(Collectors.joining(", "));
-                throw new RuntimeException("Test failed with the following exception(s): " + asString, head);
+                String exceptionsAsString =
+                        exceptions.stream().map(Throwable::toString).collect(Collectors.joining(", "));
+                throw new RuntimeException("Test failed with the following exception(s): " + exceptionsAsString, head);
             }
         }
     }

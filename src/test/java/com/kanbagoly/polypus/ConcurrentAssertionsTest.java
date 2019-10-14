@@ -22,13 +22,24 @@ class ConcurrentAssertionsTest {
         ThrowableAssert.ThrowingCallable testShouldFail = () ->
                 assertConcurrently(creator, query)
                         .repeatedCalls(100)
-                        .timeoutAfter(1, TimeUnit.SECONDS)
+                        .timeoutAfter(5, TimeUnit.SECONDS)
                         .shouldNotThrow();
 
         assertThatCode(testShouldFail)
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageStartingWith(
                         "Test failed with the following exception(s): java.util.ConcurrentModificationException");
+    }
+
+    @Test
+    void threadSafeExecutionShouldThrow() {
+        Runnable skip = () -> {};
+        assertThatCode(() ->
+                assertConcurrently(skip, skip)
+                        .repeatedCalls(100)
+                        .timeoutAfter(5, TimeUnit.SECONDS)
+                        .shouldNotThrow())
+                .doesNotThrowAnyException();
     }
 
     private static class NotThreadSafeClass {
