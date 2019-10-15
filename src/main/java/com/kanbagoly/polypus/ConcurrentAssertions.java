@@ -25,7 +25,7 @@ public class ConcurrentAssertions {
 
     private final List<Runnable> tasks;
     private int nTimes = 100;
-    private Duration timeout = new Duration(1, TimeUnit.MILLISECONDS);
+    private Duration timeout = new Duration(1, TimeUnit.SECONDS);
 
     private ConcurrentAssertions(List<Runnable> tasks) {
         this.tasks = tasks;
