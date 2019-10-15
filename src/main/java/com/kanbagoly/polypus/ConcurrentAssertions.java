@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 // Spot thrown exceptions
 // No checked exception thrown in the method signatures
 // TODO: More meaningful method names
-// TODO: provide test
 // TODO: Java 8 Futures?
 public class ConcurrentAssertions {
 
