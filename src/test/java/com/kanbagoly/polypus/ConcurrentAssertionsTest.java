@@ -22,7 +22,7 @@ class ConcurrentAssertionsTest {
 
         ThrowableAssert.ThrowingCallable testShouldFail = () ->
                 assertConcurrently(creator, query)
-                        .repeatedCalls(100)
+                        .repeatedCalls(1000)
                         .timeoutAfter(5, TimeUnit.SECONDS)
                         .shouldNotThrow();
 
