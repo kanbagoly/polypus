@@ -48,7 +48,7 @@ class ConcurrentAssertionsTest {
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Thread.currentThread().interrupt();
             }
         };
 
@@ -60,8 +60,7 @@ class ConcurrentAssertionsTest {
 
         assertThatCode(testShouldTimeOut)
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageStartingWith(
-                        "Timeout after 1 milliseconds");
+                .hasMessage("Timeout after 1 milliseconds");
     }
 
     @Test
