@@ -74,11 +74,11 @@ public class ConcurrentAssertions {
         }
     }
 
-    // TODO: Readable exception ?
     private void await(CountDownLatch latch) {
         try {
             if (!latch.await(timeout.amount, timeout.unit)) {
-                throw new RuntimeException("Timeout after " + timeout.amount + " " + timeout.unit);
+                String unit = timeout.unit.name().toLowerCase();
+                throw new RuntimeException("Timeout after " + timeout.amount + " " + unit);
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

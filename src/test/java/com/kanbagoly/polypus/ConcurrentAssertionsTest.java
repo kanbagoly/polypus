@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,28 @@ class ConcurrentAssertionsTest {
                         .timeoutAfter(5, TimeUnit.SECONDS)
                         .shouldNotThrow())
                 .doesNotThrowAnyException();
+    }
+
+    @Test
+    void longRunningTaskShouldThrow() {
+        Runnable slowTask = () -> {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        };
+
+        ThrowableAssert.ThrowingCallable testShouldTimeOut = () ->
+                assertConcurrently(slowTask)
+                        .repeatedCalls(100)
+                        .timeoutAfter(1, TimeUnit.MILLISECONDS)
+                        .shouldNotThrow();
+
+        assertThatCode(testShouldTimeOut)
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageStartingWith(
+                        "Timeout after 1 milliseconds");
     }
 
     @Test
