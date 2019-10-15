@@ -11,12 +11,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-// No dependency
-// Threads should start at the same time
-// Have timeout (so and test should fail if it pass)
+// TODO: Add a documentation with:
+// Spot and collect thrown exceptions by the individual threads
 // Possible to write fast test (< 1s)
-// Spot thrown exceptions
+// Threads should start at the same time (limited by the thread pool)
+// Have timeout (so and test should fail if it pass)
 // No checked exception thrown in the method signatures
+// No dependency
+// Timeouts and repetition is optional
 // TODO: More meaningful method names
 // TODO: Java 8 Futures?
 public class ConcurrentAssertions {
