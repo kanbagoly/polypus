@@ -82,7 +82,7 @@ public class ConcurrentAssertions {
                 throw new RuntimeException("Timeout after " + timeout.amount + " " + unit);
             }
         } catch (InterruptedException e) {
-            throw new RuntimeException("Await interrupted", e);
+            Thread.currentThread().interrupt();
         }
     }
 
