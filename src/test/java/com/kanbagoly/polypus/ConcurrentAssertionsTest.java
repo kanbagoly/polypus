@@ -75,7 +75,7 @@ class ConcurrentAssertionsTest {
     }
 
     private static class NotThreadSafeClass {
-        private List<Integer> list = new ArrayList<>();
+        private final List<Integer> list = new ArrayList<>();
         private void add(Integer number) {
             list.add(number);
         }
