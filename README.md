@@ -17,12 +17,12 @@ Lets assume we have the following (not thread-safe) class
 
 ```java
 class NotThreadSafeClass {
-    private final List<Integer> list = new ArrayList<>();
+    private final List<Integer> numbers = new ArrayList<>();
     private void add(Integer number) {
-        list.add(number);
+        numbers.add(number);
     }
     private List<Integer> getNumbers() {
-        return list.stream().collect(Collectors.toList());
+        return numbers.stream().collect(Collectors.toList());
     }
 }
 ```
