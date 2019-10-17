@@ -28,7 +28,7 @@ class NotThreadSafeClass {
 ```
 and we want to test it if the class is thread-safe.
 With this solution we can do it with the following way:
-```
+```java
 @Test
 void notThreadSafeExecutionShouldThrow() {
     NotThreadSafeClass notThreadSafe = new NotThreadSafeClass();
@@ -39,5 +39,5 @@ void notThreadSafeExecutionShouldThrow() {
             .repeatedCalls(100)
             .timeoutAfter(1, TimeUnit.SECONDS)
             .shouldNotThrow();
-    }
+}
 ```
