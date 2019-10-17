@@ -1,7 +1,7 @@
 # polypus
 Lightweight solution to assert that concurrently executed Java codes should be not throw any exceptions.
 
-##benefits
+## benefits
 * Spot and collect thrown exceptions by the individual threads and make the test's thread fail if any thrown.
 * Makes possible to write fast (< 1s) concurrent tests.
 * Makes sure that the parallel threads should start at the same time as much as possible
@@ -11,7 +11,7 @@ Lightweight solution to assert that concurrently executed Java codes should be n
 * Solution has no external dependency
 * Timeouts and repetition are optional parameters
 
-##usage
+## usage
 
 Lets assume we have the following (not thread-safe) class
 
