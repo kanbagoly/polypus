@@ -2,8 +2,8 @@
 Lightweight solution to assert that concurrently executed Java codes should be not throw any exceptions.
 
 ## benefits
-* Spot and collect thrown exceptions by the individual threads and make the test fail if any thrown.
-* Makes possible to write fast (< 1s) concurrency tests.
+* Spot and collect thrown exceptions by the individual threads and make the test fail if any thrown
+* Makes possible to write fast (< 1s) concurrency tests
 * Makes sure that the parallel threads should start at the same time as much as possible
   (limited by the thread pool's size)
 * Test have timeout (we don't want long running tests)
@@ -27,7 +27,7 @@ class NotThreadSafeClass {
 }
 ```
 and we want to test it if the class is thread-safe.
-With this solution we can do it with the following way:
+With this solution we can assert that the parallel execution of the class' methods should not throw any exceptions:
 ```java
 @Test
 void notThreadSafeExecutionShouldThrow() {
