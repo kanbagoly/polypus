@@ -4,7 +4,7 @@ Lightweight solution to assert that concurrently executed Java codes should not 
 ## benefits
 * Report thrown exceptions by the individual threads and fail the test if any thrown
 * Possible to write fast (< 1s) concurrency tests
-* Makes sure that the parallel threads start at the same time as much as possible
+* Make sure that the parallel threads start at the same time as much as possible
   (limited by the thread pool's size)
 * Test have timeout (we don't want long running tests)
 * No need to care about checked exceptions (e.g.: `InterruptedException`) in the method signatures
