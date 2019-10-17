@@ -30,7 +30,7 @@ and we want to test it if the class is thread-safe.
 With this solution we can assert that the parallel execution of the class' methods should not throw any exceptions:
 ```java
 @Test
-void notThreadSafeExecutionShouldThrow() {
+void parallelExecutionShouldNotThrow() {
     NotThreadSafeClass notThreadSafe = new NotThreadSafeClass();
     Runnable creator = () -> notThreadSafe.add(1);
     Runnable query = () -> notThreadSafe.getNumbers();
