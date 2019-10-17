@@ -8,8 +8,8 @@ Lightweight solution to assert that concurrently executed Java codes should be n
   (limited by the thread pool's size)
 * Have timeout (we don't want long running tests)
 * No need to prepare to care about checked exceptions (e.g.: `InterruptedException`)
-* Solution has no external dependency
-* Timeouts and repetition are optional parameters
+* No dependency to external libraries
+* Timeout and repetition are optional parameters
 
 ## usage
 
