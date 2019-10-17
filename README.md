@@ -26,7 +26,7 @@ class NotThreadSafeClass {
 }
 ```
 and we want to test if the class is thread-safe.
-With this solution we can assert that the parallel execution of the class' methods should not throw any exceptions:
+With `polypus` we can assert that the parallel execution of the class' methods should not throw any exceptions:
 ```java
 @Test
 void concurrentExecutionShouldNotThrow() {
