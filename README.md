@@ -1,4 +1,4 @@
-# polypus
+# 🐙 polypus
 Lightweight solution to assert that concurrently executed Java codes should be not throw any exceptions.
 
 ## benefits
