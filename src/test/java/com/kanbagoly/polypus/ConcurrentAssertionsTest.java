@@ -16,11 +16,11 @@ class ConcurrentAssertionsTest {
     @Test
     void notThreadSafeExecutionShouldThrow() {
         NotThreadSafeClass notThreadSafe = new NotThreadSafeClass();
-        Runnable creator = () -> notThreadSafe.add(1);
+        Runnable insert = () -> notThreadSafe.insert(1);
         Runnable query = () -> notThreadSafe.getNumbers();
 
         ThrowableAssert.ThrowingCallable testShouldFail = () ->
-                assertConcurrently(creator, query)
+                assertConcurrently(insert, query)
                         .repeatedCalls(1000)
                         .timeoutAfter(5, TimeUnit.SECONDS)
                         .shouldNotThrow();
@@ -76,7 +76,7 @@ class ConcurrentAssertionsTest {
 
     private static class NotThreadSafeClass {
         private final List<Integer> numbers = new ArrayList<>();
-        private void add(Integer number) {
+        private void insert(Integer number) {
             numbers.add(number);
         }
         private List<Integer> getNumbers() {

@@ -17,7 +17,7 @@ Let's assume we have the following (not thread-safe) class
 ```java
 class NotThreadSafeClass {
     private final List<Integer> numbers = new ArrayList<>();
-    private void add(Integer number) {
+    private void insert(Integer number) {
         numbers.add(number);
     }
     private List<Integer> getNumbers() {
@@ -29,12 +29,12 @@ and we want to test if the class is thread-safe.
 With this solution we can assert that the parallel execution of the class' methods should not throw any exceptions:
 ```java
 @Test
-void parallelExecutionShouldNotThrow() {
+void concurrentExecutionShouldNotThrow() {
     NotThreadSafeClass notThreadSafe = new NotThreadSafeClass();
-    Runnable creator = () -> notThreadSafe.add(1);
+    Runnable insert = () -> notThreadSafe.insert(1);
     Runnable query = () -> notThreadSafe.getNumbers();
 
-    assertConcurrently(creator, query)
+    assertConcurrently(insert, query)
             .repeatedCalls(100)
             .timeoutAfter(1, TimeUnit.SECONDS)
             .shouldNotThrow();
